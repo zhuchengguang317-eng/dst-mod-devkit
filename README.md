@@ -12,8 +12,8 @@
 技能包：AI 加载本技能后，即使它**从未写过饥荒 mod**，也能独立完成
 「写代码 → 做资产 → 自测 → 交付」全流程。
 
-- **10 篇分层参考文档**：从第一个 mod 的完整 walkthrough，到物品/武器/料理/角色/植物/
-  联机同步/动画编译，按需加载（渐进式披露，不浪费上下文）。
+- **11 篇分层参考文档**：从第一个 mod 的完整 walkthrough，到物品/武器/料理/角色/植物/
+  联机同步/动画编译/音效制作，按需加载（渐进式披露，不浪费上下文）。
 - **40+ 条崩溃对照表**：症状 → 根因 → 修法，全部来自真实崩溃日志与官方源码行号佐证。
 - **3 个零依赖工具**（纯 Python 标准库，跨平台）：
   | 工具 | 功能 |
@@ -59,7 +59,8 @@ dst-mod-devkit/
 │   ├── characters.md             # 角色 mod/自定义三维/技能轮盘/HUD
 │   ├── world-and-plants.md       # 植物树木/种植/世界生成
 │   ├── networking.md             # replica/RPC/hook/客户端 HUD
-│   ├── animation-assets.md       # 贴图/SCML 编译/手持 swap/特效/FMOD 音效
+│   ├── animation-assets.md       # 贴图/SCML 编译/手持 swap/特效/KTEX 格式
+│   ├── sound-and-fmod.md         # 音效全流程：wav 加工/fdp 模板/编译/QC/排查
 │   ├── crash-playbook.md         # 崩溃对照表（症状→根因→修法，40+ 条）
 │   ├── testing.md                # 无头测试完整指南
 │   └── release-checklist.md      # 发布前自检清单
@@ -94,7 +95,7 @@ dst-mod-devkit/
 An Agent Skill that teaches an AI coding assistant (Claude Code / Codex / etc.) to build
 working Don't Starve Together mods end-to-end — even with zero prior DST modding knowledge.
 
-**Contents**: 10 layered reference docs (progressive disclosure), a 40+ entry
+**Contents**: 11 layered reference docs (progressive disclosure), a 40+ entry
 symptom→cause→fix crash playbook backed by game-source line numbers, and 3 dependency-free
 Python tools: `dst_zip_tool.py` (query the official scripts.zip directly), `check_api.py`
 (verify component methods exist before runtime crashes), and `dst_modtest.py` (**headless
