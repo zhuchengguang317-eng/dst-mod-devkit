@@ -84,8 +84,8 @@ python scripts/dst_modtest.py <mod目录> --script test.lua   # 附加行为测�
 | modmain / modinfo / 配置项 / 作用域 | `lua-and-prefabs.md` |
 | 物品 / 武器 / 护甲 / 投掷 / 弓 / 配方科技 | `items-and-weapons.md` |
 | 锅料理 / 食物 / 角色台词 | `food-and-cooking.md` |
-| 角色 mod / 自定义三维 / 技能轮盘 / HUD | `characters.md` |
-| 植物 / 树木 / 种植 / 世界生成 | `world-and-plants.md` |
+| 角色 mod / 自定义三维 / 技能轮盘 / HUD / 人物贴图硬尺寸 | `characters.md` |
+| 植物 / 树木 / 种植 / 世界生成 / 新地皮 | `world-and-plants.md` |
 | 联机同步 / RPC / replica / hook 原版 | `networking.md` |
 | 贴图 / 动画编译 / 手持 swap / 特效 / 音效 | `animation-assets.md` |
 | 崩了 / 不显示 / 报错 | `crash-playbook.md`（症状→根因→修法对照表） |
