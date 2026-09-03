@@ -108,15 +108,11 @@ inst.AnimState:SetScale(8, 8, 1)    -- ★ 必须 SetPristine 之前（本地渲
 
 ## 五、自定义音效（FMOD fev/fsb）
 
-- mod 音频必须走 FMOD：`Asset("SOUNDPACKAGE","sound/x.fev")` + `Asset("SOUND","sound/x.fsb")`。
-- 工具就在 Mod Tools：`fmod_designercl.exe -pc -b <outdir> <project.fdp>`（.fdp 是 XML，
-  从带声音的 mod 抄模板改 GUID/wav 路径；音频先 `ffmpeg -c:a pcm_s16le` 转 PCM wav，
-  44.1kHz/16bit）。
-- 事件路径 = 项目名/组名/事件名（组名用小写 `sound`），PlaySound 用完整字符串；
-  **FSB5 格式本身不崩**（原版全是 FSB5）——客户端崩先查 wav 参数而非容器格式。
+mod 音频必须走 FMOD：`Asset("SOUNDPACKAGE","sound/x.fev")` + `Asset("SOUND","sound/x.fsb")` 成对声明，
+事件路径 = `项目名/sound/事件名`。**完整制作管线（wav 加工 / fdp 模板法 / 编译 / QC / 排查表）
+见 `sound-and-fmod.md`**。速记两条：
 - 构建后查 fsb 大小 ≈ wav 字节数（192 字节 = 静默空壳，SUCCESS 日志不可信）。
-- 3D 空间感：fdp 里 `x_2d` → `x_3d` + mindistance/maxdistance 调整。
-- 排查：DST 原版音效就是 FSB5，"格式必崩"是误诊；抓 client_log / minidump 看真凶。
+- "FSB5 格式必崩"是误诊（原版全是 FSB5）——客户端崩先查 wav 参数（44.1kHz/16bit/stereo PCM）。
 
 ## 六、贴图/图集 API 细节
 
