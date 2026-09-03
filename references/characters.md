@@ -140,3 +140,37 @@ makeplayerghost / 抄 GitHub 代码先查 `not a == b`（恒 false，应写 `a ~
 - 重编译前**先删 anim/*.zip**（zip 只被改名时 scml.exe 假报 "up to date"）。
 - ghost build 也要重编（模板带 ghost build 的 scml 源）。
 - 美术细节（调色/AI 重绘/帧定位公式）较深，首次做角色建议直接在模板上换色起步。
+
+## 六、官方人物模板路线（硬尺寸标准 + 18 项界面资产）
+
+> 整理自 Klei 官方模板 `extended sample character-DST`（esctemplate，api_version 10），
+> 汇编参考 zxiyx/dst-mod-creater 的逆向笔记；`AddModCharacter(name, gender, modes)`
+> 三参签名已对照官方源码核实（modutil.lua:73）。
+
+### 贴图尺寸硬标准（人物美术生成前必查，不得偏离）
+
+| 用途 | 硬尺寸 |
+|---|---|
+| 角色动画贴图（Spriter 导入原图） | **1024x512 RGBA** |
+| 存档槽头像 saveslot | **120x104** |
+| 选人界面头像 selectscreen | **188x284**（另需 `_silho` 剪影版同尺寸） |
+| 选人大肖像 bigportrait | **1024x1024**（源图 491x654 灰度胸像，编译前上色） |
+| 小地图 map_icons / 头像 avatars×3（avatar/avatar_ghost/self_inspect） | 64x64 |
+| 名称横幅 names / names_gold | png 源 876x434（编译后 tex 1024x512） |
+| modicon | 128x128 |
+
+- **选人界面 18 项资产**（modmain 逐项 Asset 声明，缺一项界面空白/报错）：
+  saveslot / selectscreen(+silho) / bigportraits / map_icons / avatars×3 / names / names_gold
+  / modicon 及各 .tex+.xml 产物；小地图另需 `AddMinimapAtlas("images/map_icons/xxx.xml")`。
+- **names_[char].xml 陷阱**：编译后必须把 xml 里 **Element name 改成 `[角色名].tex`**
+  （Texture filename 不动），否则选人界面角色名不显示。
+- **幽灵 build 也要做**：`ghost_<build>.zip`（白色身体 + 雾 FX + 眼睛），
+  配 `CreatePrefabSkin` 注册 `type="base"` 皮肤：
+  `AddModCharacter("mychar", "FEMALE", { { type="ghost_skin", anim_bank="ghost", idle_anim="idle", scale=0.75, offset={0,-25} } })`。
+- 语音表 `speech_<char>.lua`：整表抄 Wilson 基准（3000+ 行），只改自己要覆盖的条目；
+  `STRINGS.CHARACTERS.MYCHAR = require "speech_mychar"`。
+- 选人界面文案：`STRINGS.CHARACTER_TITLES/NAMES/DESCRIPTIONS/QUOTES/SURVIVABILITY`
+  （DESCRIPTIONS 用 `\n` 逐行写天赋）。
+- 部位帧数/pivot 标准：全角色共用 wilson 骨架，模板 20 部位 155 帧
+  （face 33帧200x200 / torso 11帧160x120 / hand 20帧 / foot 8帧 …），
+  **保持官方帧数与 pivot，只换像素**。
