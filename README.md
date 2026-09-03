@@ -81,6 +81,9 @@ dst-mod-devkit/
 - 无头测试工具来自 [dst-modtest](https://github.com/zhuchengguang317-eng/dst-modtest)。
 - 技能结构设计参考了 [KyuubiRan/dst-mod-skill](https://github.com/KyuubiRan/dst-mod-skill) 的
   渐进式披露思路。
+- 人物硬尺寸标准 / KTEX 纹理格式逆向 / TileManager.AddTile 地皮注册等章节，
+  整理时参考了 [zxiyx/dst-mod-creater](https://github.com/zxiyx/dst-mod-creater) 的逆向笔记
+  （相关 API 已逐一对照官方源码核实）。
 - 经验沉淀自 10+ 个已发布 DST mod 的开发实践。
 
 ---
