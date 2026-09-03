@@ -126,3 +126,20 @@ python scripts/dst_modtest.py <mod目录> --script test.lua   # 附加行为测�
 - ❌ 禁止在 `scripts/`（prefab/组件/widget）里用 `GLOBAL.` 前缀或 modmain 的自定义 env 变量。
 - ❌ 禁止修改用户的动画资产（.scml）而不先告知；纯重建编译优先，改动需用户同意。
 - ❌ 禁止没跑 `dst_modtest.py` 就声称 mod 完成。
+
+## 无工具执行环境时（网页对话 AI / 只读到了文档）
+
+本技能的保险是"文档 + 工具"双层的。如果你**无法执行** `check_api.py` / `dst_modtest.py`
+（例如纯网页对话、没有本地环境），等效保险降级，必须执行更严格的纪律：
+
+1. **API 白名单制**：只允许使用 references 文档里**字面出现过**的 API 名与方法名。
+   文档里没有的组件方法 = 不存在，**禁止发明**（`weapon:SetInfinite`、
+   `planardamage:SetDamage` 这类"看起来很合理"的名字都是幻觉，真实源码里没有）。
+2. **逐字照抄模板骨架**：modinfo / modmain / prefab 结构以 `references/first-mod.md`
+   的 walkthrough 为唯一底版，只改名字和数值，不重组、不"优化"结构。
+   特别是：`GLOBAL` 是沙箱自带变量（**不是 require 来的**）；注册 prefab 只有
+   `PrefabFiles` + `scripts/prefabs/xxx.lua` + `Prefab(...)` 一条路（没有 `AddPrefab`）；
+   配方只用 `AddRecipe2`。
+3. **把校验命令留给用户跑**：生成代码后，明确列出"请在本机执行"的两条命令
+   （`check_api.py`、`dst_modtest.py`）并把 PASS 作为交付条件写进回复，
+   而不是宣称"已完成"。
