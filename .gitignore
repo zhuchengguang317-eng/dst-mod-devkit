@@ -1,0 +1,8 @@
+# Auto-generated caches (rebuilt on first run; never publish Klei's extracted scripts)
+scripts/.zip_cache/
+__pycache__/
+*.pyc
+
+# Local testing artifacts
+*.log
+test_output/
