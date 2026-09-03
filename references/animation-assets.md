@@ -125,3 +125,23 @@ inst.AnimState:SetScale(8, 8, 1)    -- ★ 必须 SetPristine 之前（本地渲
   <Element name="xxx" width="64" height="64" u1..v2/></Elements></Atlas>`。
 - 食谱书/图鉴不显示贴图：`RegisterInventoryItemAtlas("images/xxx.xml", "xxx")`（第二参不带 .tex）。
 - 64×64 DXT 压缩后文件大小可能相同 → 判"是不是同一张图"用 md5 不用字节数。
+
+## 七、KTEX 纹理格式速记（写解码/转换工具用）
+
+> 格式逆向整理自 zxiyx/dst-mod-creater（3295 文件统计验证）；手头有 ktools 时优先用 ktech，
+> 本节用于无 ktools 环境或需要批量分析的场景。
+
+```
+offset 0:   "KTEX" magic (4 bytes)
+offset 4:   format u32 — 低 16 位: 0x2220 族 = DXT5（尾 0x20）、0x2200 族 = DXT1（尾 0x00）
+offset 8:   N 个 mip 头连续排列，每个 10 字节: (w u16, h u16, pitch u16, size u32)
+            N = log2(min(w,h)) + 1
+数据区:     紧跟全部 mip 头之后（offset = 8 + 10*N），按 mip 从大到小连续存放
+```
+
+- ★ **mip 头是"全部头在前、全部数据在后"，不是头数据交错**——最容易写错的地方。
+- size 字段 = 该级 mip 的数据字节数：**DXT5 = w*h，DXT1 = w*h/2，RGBA8 = w*h*4**；
+  先按数据区总大小判定格式（== w*h*4 即 8-bit RGBA 无压缩），**不要假设 DXT**。
+- **官方人物模板（esctemplate 系）全部图片资产是 RGBA8 无压缩**；游戏整体 DXT5 占 95.7%。
+- 人物大 build 用双图集拆分：`atlas-0.tex + atlas-1.tex` 同装一个 anim zip。
+- 尺寸规范：几乎全 2 的幂；图标 64x64 / 大图 256 / UI 512-1024 / 地皮纹理 1024x1024 / tile 集 2048x1024。
