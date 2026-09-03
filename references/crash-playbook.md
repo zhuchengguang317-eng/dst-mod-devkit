@@ -77,6 +77,7 @@
 | 重连后 HUD 状态错 | net 值没变不触发 dirty | 初始主动同步 + 轮询兜底 |
 | buff 加成永不消失 | OnDetached 没清事件回调 | RemoveEventCallback 三件套 |
 | 客户端无法启动（无 Lua 报错） | 动画 149 帧超限 / 原生崩溃 | 帧数压到 60 量级；看 client .dmp |
+| 播放自定义音效即崩 / 无声 | bank 未声明（缺 SOUNDPACKAGE/SOUND 成对）；wav 参数错 | 对照 sound-and-fmod.md 排查表；"FSB5 必崩"是误诊 |
 
 ## F. 测试环境专项（不是 mod 的锅）
 
