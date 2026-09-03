@@ -110,3 +110,31 @@ end)
 
 prefab 名 / bank 名 / 贴图名凡有引用先验证存在：`moontree_blossom`（物品 prefab）的 bank
 叫 `moon_tree_petal` —— 掉落/配方里写 bank 名 = SpawnLootPrefab 崩。
+
+## 五、新地皮（TileManager.AddTile 动态注册）
+
+> 签名与常量已对照官方源码核实：tilemanager.lua:147 / tiledefs.lua:85-89 /
+> worldtiledefs.lua:7-13 / constants.lua:811。旧版 tiles.lua/GROUND 常量表已废弃
+> （constants.lua 注释 "deprecated, nothing should add into this table"）。
+
+```lua
+-- 现代写法：所有地皮由 TileManager.AddTile 动态注册，ID 自动分配进 WORLD_TILES
+local AddTile = GLOBAL.require("tilemanager").AddTile   -- 或经 modutil 钩子
+AddTile("myturf", GLOBAL.TileRanges.LAND,
+    { ground_name = "myturf" },          -- tile_data（新 tile 无 old_static_id，可省略）
+    { name = "myturf", texture = ..., noise_texture = ... },  -- ground_tile_def
+    { name = "myturf" },                 -- minimap_tile_def
+    nil)                                 -- turf_def（可采集地皮物品定义，可选）
+```
+
+- **mod 只能在 tiledefs.lua 的 `mod_protect_TileManager = false` 窗口期内调**（该文件
+  85→1652 行之间；官方设计即允许 mod 在此窗口注册，越窗直接 assert 崩）。
+- **贴图路径自动映射**：`ground_tile_def.name` → `levels/tiles/<name>.tex` 与 `.xml`
+  （GroundImage/GroundAtlas，worldtiledefs.lua:7-13）——所以贴图必须放对目录，
+  尺寸 1024x1024、tile 图集 2048x1024（128x128 一格）。
+- ID 段：`WORLD_TILES_LAND_START = 256`（constants.lua:811），LAND/NOISE/OCEAN/
+  IMPASSABLE 各段独立递增；TileGroupManager 按段判断 IsLandTile/IsOceanTile。
+- mod 端还有 `env.RegisterTileRange(range_name, start, end)` 钩子（modutil.lua:357）可自定义段。
+- **零美术成本技巧**（神话书说/登仙实证）：tile 的 xml 直接引用游戏本体纹理
+  `<Texture filename="data/DLC0002/levels/tiles/jungle.tex"/>` 只重排 UV 造"新"地皮。
+- 铺设：`TheWorld.Map:SetTile(coords, WORLD_TILES.myturf)`（清 undertile 下层数据）。
