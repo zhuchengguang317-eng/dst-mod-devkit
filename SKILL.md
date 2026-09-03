@@ -87,7 +87,8 @@ python scripts/dst_modtest.py <mod目录> --script test.lua   # 附加行为测�
 | 角色 mod / 自定义三维 / 技能轮盘 / HUD / 人物贴图硬尺寸 | `characters.md` |
 | 植物 / 树木 / 种植 / 世界生成 / 新地皮 | `world-and-plants.md` |
 | 联机同步 / RPC / replica / hook 原版 | `networking.md` |
-| 贴图 / 动画编译 / 手持 swap / 特效 / 音效 | `animation-assets.md` |
+| 贴图 / 动画编译 / 手持 swap / 特效 | `animation-assets.md` |
+| 音效 / FMOD 银行 / 声音太大 / 没有空间感 | `sound-and-fmod.md` |
 | 崩了 / 不显示 / 报错 | `crash-playbook.md`（症状→根因→修法对照表） |
 | 自测 / 行为测试 / 清理残留进程 | `testing.md` |
 | 发布前最后检查 | `release-checklist.md` |
