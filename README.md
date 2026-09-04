@@ -20,7 +20,7 @@
   |---|---|
   | `dst_zip_tool.py` | 直接 list/grep/show/extract 官方 `scripts.zip`，写代码前查 API 不用解包 |
   | `check_api.py` | 校验 mod 代码里调用的组件方法是否真实存在（防"语法对但运行必崩"） |
-  | `dst_modtest.py` | **无头测试**：用游戏自带专用服务器离线启动 mod，30~60 秒输出 PASS/FAIL |
+  | `dst_modtest.py` | **无头测试**：用游戏自带专用服务器离线启动 mod，30~60 秒输出 PASS/FAIL；行为脚本（`--script`）的 return 值会被类型化序列化回传，支持真值断言 |
 
 ## 为什么需要它
 
