@@ -37,6 +37,24 @@ cd "<Steam>/common/Don't Starve Mod Tools/mod_tools"
 - `krane.exe <解压目录> <输出>` 把 anim zip 反编译回 SCML（拆原版资源学习用）。
 - 物品栏图集 xml 手写：Element name **不带 .tex**；UV 坐标 u1/u2/v1/v2。
 
+**D. DST Mod Tool（GUI，人类协作/视觉验收专用）**
+
+社区动画/贴图一体化 GUI 工具（作者 Aether825/msisunny，Klei 官方论坛 2025-08 发布，
+下载页 `msisunny.github.io/dst-mod-tool-publisher`，B站教程 BV1pHhLzGECT；未签名软件，
+浏览器告警属正常，作者已确认安全）。
+
+- **AI 无法点击 GUI**——它的定位不是替代上面 A/B/C 自动化管线，而是两件事：
+  1. **让用户做视觉验收**：AI 无头测试只能证明"能加载"，画面观感（pivot/缩放/层级/帧序）
+     需要人看——引导用户把 anim zip 或 SCML 直接拖进工具即可预览 Build/Anim 双视图，
+     这正好补上 testing.md 说的"无头测试盲区"。
+  2. **修 CLI 工具修不好的图**：官方 autocompiler 打包错位/贴图丢失、ktools 解包异常，
+     该工具声称已修复；TEX 预览/切割/多图合并生成 xml 也是它一键能做的。
+- 其他能力（写给用户参考）：SCML↔ZIP 互转、Spine 3.8/4.2 导入导出（比 Spriter 好编辑）、
+  GIF/序列帧快速建动画、批量正则替换/删除符号层、"follow symbol"拼装子动画
+  （官方教程用它做骑龙蝇动画：逆变换提取骑乘动作趋势 → 正则拆前后层 → follow symbol 挂载）。
+- AI 侧配合方式：编译产物给出后，回复里建议用户"拖进 DST Mod Tool 预览确认视觉"，
+  把用户反馈（哪个符号/帧不对）拿回来改 Lua 或 SCML 再重编。
+
 ### anim zip 三件套铁律
 
 zip 内必须 `build.bin + anim.bin + atlas-*.tex` **三件齐全**——脚本按扩展名收集极易漏 .tex，
