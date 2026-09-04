@@ -26,35 +26,43 @@ python scripts/dst_modtest.py <mod目录> --timeout 180
 
 ## 流程 B：定向行为测试（验证逻辑真的跑通）
 
-写一个 Lua 测试脚本，世界加载 10 秒后由临时 runner mod 执行：
+写一个 Lua 测试脚本，世界加载 10 秒后由临时 runner mod 执行。**脚本在沙箱 env 里跑，
+`return` 的值会被类型化序列化（nil/bool/number/string/table），经
+`unsafedata/dst_modtest_response.txt` 回传，工具在报告里直接打印**：
 
 ```lua
 -- test_mysword.lua（在服务器环境执行）
-local function ok(tag) print("[MODTEST] " .. tag) end
-
 local sword = SpawnPrefab("mysword")
 if sword == nil then error("[MODTEST] spawn failed") end
-ok("SPAWN OK")
 
--- 组件断言
 assert(sword.components.weapon ~= nil, "no weapon comp")
-ok("WEAPON OK")
-assert(sword.components.weapon:GetDamage() > 0, "zero damage")
-ok("DAMAGE OK")
-
--- 动画资源断言
 assert(sword.AnimState ~= nil, "no animstate")
-ok("ANIM OK")
 
 print("[MODTEST] SCRIPT_OK")   -- ★ 成功标记，工具认这一行
-GLOBAL.c_shutdown()            -- ★ 用这个退出；os.exit 在 DST 沙箱里是 nil！
+return sword.components.weapon:GetDamage() > 0, sword.prefab
+-- ↑ return 的值会出现在工具报告的 "return values" 里（真值断言，
+--   比 print 标记表达力强得多）；不写 return 也行，纯标记模式照旧可用
 ```
 
 ```bash
 python scripts/dst_modtest.py ./mymod --script test_mysword.lua
+# 报告末尾会多出：
+#   script status : ok
+#   return values :
+#     true
+#     "mysword"
 ```
 
-- 每个预期节点前后打标记，看标记是否全数出现 = 行为链路通。
+- 判定三通道：日志标记（`[MODTEST] SCRIPT_OK`）+ 响应文件 status + 退出码，
+  任一 error 都判 FAIL；响应文件在 `<游戏目录>/bin/data/unsafedata/`（运行时
+  **唯一**允许写文件的目录，读不到时工具自动多路径探测）。
+- 机制（移植自 lw-0x4eb1a/dst-ai-scripting 的文件桥，改造成一次性单发）：
+  runner 用 `kleiloadlua` + `setfenv` 沙箱执行脚本，print 先捕获、**响应文件
+  写完之后才转发到日志**（顺序不能反——工具看到 SCRIPT_OK 就杀服务器，
+  先打日志会掐断文件写入，实测踩过）。
+- **★ 永远不要把 `debug.traceback` 当 xpcall handler**：本引擎 build 会毒化
+  Lua 状态直接崩（"LuaError but no error string"）。要栈信息就自己用
+  `debug.getinfo` 手写遍历（runner 里已内置 safe_traceback）。
 - 音效/动画播放断言：SpawnPrefab → PlayAnimation/PlaySound → print 标记
   （专用服务器 FMOD 是 nosound，能验证 bank/事件/解码不崩，验证不了听感）。
 - 退出码：脚本 error 会带崩服务器 → 工具判 FAIL；进程退出码非 0 是正常的，看日志标记。
